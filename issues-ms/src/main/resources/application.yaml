@@ -1,0 +1,37 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: issues-ms
+  data:
+    mongodb:
+      database: issues_ms
+      host: localhost
+      port: 27017
+  main:
+    allow-bean-definition-overriding: true
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+  kafka:
+    bootstrap-servers: localhost:29092
+    producer:
+      properties:
+        spring:
+          json:
+            add:
+              type:
+                headers: false
+mongock:
+  change-logs-scan-package: com.codeonmars.issuesms.config
+
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8080/eureka
+  instance:
+    hostname: registry-ms
+    prefer-ip-address: true
