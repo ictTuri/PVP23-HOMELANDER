@@ -1,0 +1,6 @@
+/.metadata/
+/.*/.mvn
+/.*/target
+/.*/.idea
+/.*/.settings
+
