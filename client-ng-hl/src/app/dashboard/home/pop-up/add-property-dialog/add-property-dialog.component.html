@@ -1,0 +1,95 @@
+@if (isLoading) {
+<div class="mask" style="text-align: center;">
+  <hl-loading-spinner></hl-loading-spinner>
+</div>
+}
+<h2 mat-dialog-title>Add New Property</h2>
+<mat-dialog-content>
+  <form class="row g-3" [formGroup]="propertyForm">
+    <div class="col-md-6">
+      <label for="description" class="form-label">Description</label>
+      <textarea type="text" rows="3" formControlName="description" class="form-control" id="description"></textarea>
+    </div>
+    <div class="col-md-6">
+      <label for="longDescription" class="form-label">Long Description</label>
+      <textarea type="text" rows="3" formControlName="longDescription" class="form-control"
+        id="longDescription"></textarea>
+    </div>
+    <div class="col-md-3">
+      <label for="size" class="form-label">Size</label>
+      <input type="number" formControlName="size" value="1" class="form-control" id="size">
+    </div>
+    <div class="col-md-3">
+      <label for="unit" class="form-label">Unit</label>
+      <select formControlName="unit" id="unit" class="form-select">
+        <option> Choose... </option>
+        <option value="m">meter</option>
+        <option value="km">kilometer</option>
+        <option value="ha">hectare</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label for="year" class="form-label">Year</label>
+      <input type="number" formControlName="year" minlength="1990" value="1990" class="form-control" id="year">
+    </div>
+    <div class="col-md-3">
+      <label for="price" class="form-label">Price</label>
+      <input type="number" formControlName="price" minlength="10" value="10" class="form-control" id="price">
+    </div>
+
+    <div formGroupName="propertyAddress" class="row" style="width: 100%;">
+      <div class="pt-4">
+        <p>Address:</p>
+        <hr>
+      </div>
+      <div class="col-md-6">
+        <label for="country" class="form-label">Country</label>
+        <div class="col">
+          <div class="btn-group-justified select select-large" data-visible="1">
+            <select class="form-control" formControlName="country" required id="country" aria-label="Country :">
+              @for (country of countries; track country.id) {
+              <option value={{country.name}}>{{country.name}}</option>
+              }
+            </select>
+            <div class="select-arrow rtl-arrow"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label for="city" class="form-label">City</label>
+        <div class="col">
+          <div class="btn-group-justified select select-large" data-visible="1">
+            <select class="form-control" formControlName="city" required id="city" aria-label="City :">
+              @for (city of cities; track city.id) {
+              <option value={{city.name}}>{{city.name}}</option>
+              }
+            </select>
+            <div class="select-arrow rtl-arrow"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label for="address" class="form-label">Address</label>
+        <input type="text" formControlName="address" class="form-control" id="address" required>
+      </div>
+      <div class="col-md-6">
+        <label for="street" class="form-label">Street</label>
+        <input type="text" formControlName="street" class="form-control" id="street" required>
+      </div>
+    </div>
+
+    <div class="col-md-12">
+      <div class="col-8">
+        <label class="btn btn-default p-0">
+          <input type="file" accept="image/*" multiple (change)="selectFiles($event)" />
+        </label>
+      </div>
+    </div>
+  </form>
+
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button class="btn btn-secondary m-2" mat-button mat-dialog-close>Cancel</button>
+  <button class="btn btn-primary m-2" type="submit" [disabled]="!propertyForm.valid" [mat-dialog-close]="true"
+    (click)="onSubmit()">Submit</button>
+</mat-dialog-actions>

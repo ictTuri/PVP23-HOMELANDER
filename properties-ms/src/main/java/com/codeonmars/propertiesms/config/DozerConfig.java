@@ -3,6 +3,7 @@ package com.codeonmars.propertiesms.config;
 import com.codeonmars.propertiesms.model.property.PropertiesEntity;
 import com.codeonmars.propertiesms.model.property.dto.PropertyDetailedDto;
 import com.codeonmars.propertiesms.model.property.dto.PropertySimpleDto;
+import com.codeonmars.propertiesms.model.property.requests.PropertyRequest;
 import com.codeonmars.propertiesms.model.property.requests.PropertyUpdateRequest;
 import com.github.dozermapper.core.Mapper;
 import com.github.dozermapper.core.loader.api.BeanMappingBuilder;
@@ -25,8 +26,7 @@ public class DozerConfig {
                         type(PropertiesEntity.class),
                         type(PropertySimpleDto.class),
                         oneWay(),
-                        mapNull(false))
-                        .fields("additionalAttributes.images","images");
+                        mapNull(false));
             }
         }).withMappingBuilders(new BeanMappingBuilder() {
             @Override
@@ -38,17 +38,6 @@ public class DozerConfig {
                         mapNull(false))
                         .fields("owner.email", "currentOwner")
                         .fields("tenant.email","currentTenant");
-            }
-        }).withMappingBuilders(new BeanMappingBuilder() {
-            @Override
-            protected void configure() {
-                mapping(
-                        type(PropertyUpdateRequest.class),
-                        type(PropertiesEntity.class),
-                        oneWay(),
-                        mapNull(true))
-                        .fields("attributes", "additionalAttributes")
-                        .fields("address","propertyAddress");
             }
         }).build();
     }

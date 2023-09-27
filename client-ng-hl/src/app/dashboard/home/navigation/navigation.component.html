@@ -1,0 +1,27 @@
+<nav class="navbar navbar-expand-sm" style="background-color: #415A77;">
+    <div class="container-fluid">
+        <span role="button" style="color: #E0E1DD;" [routerLink]="['/']" class="navbar-brand"><i class="fa-solid fa-globe"></i>
+            HOMELANDER</span>
+        <div>
+            @if (authenticated === true) {
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item" ngbDropdown>
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMuVZPUguhjwOPqFgeplotL_MmSDTV2Y-dJh72EC8yTQ&s"
+                        class="rounded-img" id="profileDropdown" style="width: 40px;" ngbDropdownToggle>
+                    <div ngbDropdownMenu style="width: 120px;" aria-labelledby="profileDropdown"
+                        class="dropdown-menu dropdown-menu-end">
+                        <a ngbDropdownItem (click)="$event.preventDefault()">Owned</a>
+                        <a ngbDropdownItem (click)="$event.preventDefault()">Rented</a>
+                    </div>
+                </li>
+            </ul>
+            } @else {
+            <ul class="nav navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" [routerLink]="['/auth']"><span class="fas fa-sign-in-alt"></span> Login</a>
+                </li>
+            </ul>
+            }
+        </div>
+    </div>
+</nav>

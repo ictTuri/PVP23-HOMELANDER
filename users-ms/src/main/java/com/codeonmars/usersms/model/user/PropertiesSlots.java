@@ -26,17 +26,15 @@ public class PropertiesSlots {
     @Column(name = "used")
     private Integer used;
 
-    public PropertiesSlots increaseSlot() {
+    public void increaseSlot() {
         if (available > used) {
             used++;
         }
-        return this;
     }
 
-    public PropertiesSlots decreaseSlot() {
+    public void decreaseSlot() {
         if (used > 0) {
             used--;
         }
-        return this;
     }
 }

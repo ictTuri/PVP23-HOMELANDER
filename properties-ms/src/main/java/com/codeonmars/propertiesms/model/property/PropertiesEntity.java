@@ -14,6 +14,8 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.time.Instant;
 
@@ -44,36 +46,26 @@ public class PropertiesEntity {
     private Double price;
     @Column(name = "year")
     private Integer year;
-
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "additional_attributes", referencedColumnName = "id")
     private AdditionalAttributes additionalAttributes;
-
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "property_address", referencedColumnName = "id")
     private PropertyAddress propertyAddress;
-
     @Column(name = "rented")
     private Boolean rented;
     @Column(name = "sold")
     private Boolean sold;
-
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "owner", referencedColumnName = "id")
     private OwnerEntity owner;
-
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "tenant", referencedColumnName = "id")
     private TenantEntity tenant;
-
+    @CreatedDate
     @Column(name = "creation_date")
     private Instant creationDate;
+    @UpdateTimestamp
     @Column(name = "last_updated_date")
     private Instant lastUpdatedDate;
-
-    public PropertiesEntity initializeAddressAndInfo() {
-        this.additionalAttributes = new AdditionalAttributes();
-        this.propertyAddress = new PropertyAddress();
-        return this;
-    }
 }

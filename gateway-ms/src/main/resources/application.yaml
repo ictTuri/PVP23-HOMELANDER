@@ -6,15 +6,6 @@ spring:
       discovery:
         locator:
           lowerCaseServiceId: true
-#      routes:
-#        - id: users-ms
-#          uri: lb://users-ms
-#          predicates:
-#            - Path=/users/**
-#        - id: properties-ms
-#          uri: lb://properties-ms
-#          predicates:
-#            - Path=/properties/**
 server:
   port: 8081
 

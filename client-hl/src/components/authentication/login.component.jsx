@@ -1,19 +1,22 @@
-import { useContext, useState } from "react";
-import COVER_IMAGE from "../../assets/cover.jpg";
-import { UserContext } from "../../context/user.context";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { login } from "../../routes/services/auth.service";
+import { Link } from "react-router-dom";
+import Cover from "./cover.component";
+import ContactSupport from "../info-tabs/contact-support.component";
+import { setCurrentUser } from "../../redux/user/user.action";
 
 const defaultFormFields = {
   credential: "",
-  password: "",
+  password: ""
 };
 
 export default function Login() {
-  const { setCurrentUser } = useContext(UserContext);
+  const dispatch = useDispatch();
 
   const [data, setData] = useState({
     credential: "",
-    password: "",
+    password: ""
   });
 
   const handleChange = (e) => {
@@ -36,7 +39,7 @@ export default function Login() {
     };
 
     try {
-      login(userData).then((response) => setCurrentUser(response.data));
+      login(userData).then((response) => dispatch(setCurrentUser(response.data)));
       resetFormFields();
     } catch (error) {
       console.log(error.code);
@@ -45,22 +48,6 @@ export default function Login() {
 
   return (
     <div className="w-full h-screen flex items-start">
-      <div className="relative w-1/2 h-full flex flex-col">
-        <div className="absolute top-[25%] left-[10%] flex flex-col">
-          <h1 className="text-4xl text-[#ffffff] font-extrabold my-4 drop-shadow-lg">
-            Make your dreams true with Home-Lander
-          </h1>
-          <p className="text-3xl font-mono text-white font-normal drop-shadow-lg">
-            Get started for free.
-          </p>
-        </div>
-        <img
-          src={COVER_IMAGE}
-          className="w-full h-full object-cover"
-          alt="cover"
-        />
-      </div>
-
       <div className="w-1/2 h-full bg-[#F5F5F5] flex flex-col p-20 justify-between items-center">
         <h1 className="w-full max-w-[500px] mx-auto text-x1 text-[#060606] font-semibold mr-auto">
           HOME-LANDER
@@ -76,24 +63,39 @@ export default function Login() {
               Welcome back! Please enter your details.
             </p>
           </div>
-          <div className="w-full flex flex-col">
-            <input
-              value={data.credential}
-              onChange={handleChange}
-              name="credential"
-              type="text"
-              placeholder="Email"
-              className="w-full text-black py-2 my-2 bg-transparent border-b border-black outline-none focus:outline-none"
-            />
-
-            <input
-              value={data.password}
-              onChange={handleChange}
-              name="password"
-              type="password"
-              placeholder="Password"
-              className="w-full text-black py-2 my-2 bg-transparent border-b border-black outline-none focus:outline-none"
-            />
+          <div className="w-full flex flex-col mt-4">
+            <div className="relative z-0 w-full mb-6 group">
+              <input
+                value={data.credential}
+                onChange={handleChange}
+                name="credential"
+                type="text"
+                placeholder=" "
+                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              />
+              <label
+                htmlFor="credential"
+                className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-8"
+              >
+                Email address
+              </label>
+            </div>
+            <div className="relative z-0 w-full mb-6 group">
+              <input
+                value={data.password}
+                onChange={handleChange}
+                name="password"
+                type="password"
+                placeholder=" "
+                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              />
+              <label
+                htmlFor="credential"
+                className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-8"
+              >
+                Password
+              </label>
+            </div>
           </div>
           <div className="w-full flex items-center justify-between">
             <div className="w-full flex items-center">
@@ -119,25 +121,16 @@ export default function Login() {
                 or
               </p>
             </div>
-
-            <button className="w-full my-4 cursor-pointer text-[#060606] font-semibold bg-white border-2 border-black rounded-md p-4 text-center flex items-center justify-center">
-              Sign up
-            </button>
+            <Link to="/register">
+              <button className="w-full my-4 cursor-pointer text-[#060606] font-semibold bg-white border-2 border-black rounded-md p-4 text-center flex items-center justify-center">
+                Sign up
+              </button>
+            </Link>
           </div>
         </form>
-
-        <div className="w-full flex items-center justify-center">
-          <p className="text-sm font-normal text-[#060606]">
-            Trouble with the form!{" "}
-            <span
-              className="font-semibold
-                    underline underline-offset-2 cursor-pointer"
-            >
-              Contact our support!
-            </span>
-          </p>
-        </div>
+        <ContactSupport />
       </div>
+      <Cover />
     </div>
   );
 }

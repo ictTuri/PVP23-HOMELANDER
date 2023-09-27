@@ -1,5 +1,6 @@
 package com.codeonmars.propertiesms.model.property.dto;
 
+import com.codeonmars.commonsms.dto.FileDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,5 +17,6 @@ public class AdditionalAttributesDto {
     private String typology;
     private String type;
     private Set<String> appliances;
-    private Set<UUID> images;
+    private FileDto image;
+    private Set<FileDto> images;
 }

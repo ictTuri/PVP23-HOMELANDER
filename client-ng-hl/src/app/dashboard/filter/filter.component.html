@@ -1,0 +1,87 @@
+<div class="container">
+
+  <form>
+    <div class="row m-3">
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+          <label for="buy" class="btn btn-default" title="Buy">
+            <input name="buy" type="checkbox" id="buy" [(ngModel)]="filter.forSale" /> Buy
+          </label>
+          <label for="rent" class="btn btn-default" title="Rent">
+            <input name="rent" type="checkbox" id="rent" [(ngModel)]="filter.forRent" /> Rent
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="d-flex align-items-center justify-content-center">
+
+        <div class="col col-sm-4">
+          <div class="col">
+            <div class="btn-group-justified select select-large"
+              data-visible="1">
+              <select class="form-control" (change)="setCity($event)" aria-label="City :">
+                <option selected="selected" value="">City :</option>
+                @for (city of cities; track city.id) {
+                  <option value={{city.name}}>{{city.name}}</option>
+                }
+              </select>
+              <div class="select-arrow rtl-arrow"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col col-sm-4">
+          <div class="btn-group-justified select select-large">
+            <select class="form-control" (change)="setPropertyType($event)" aria-label="Property type">
+              <option value=""> Property type :</option>
+              <optgroup label="Residential">
+                <option value="ApartamentR">Kondo/Apartament</option>
+                <option value="VillaR">Villa</option>
+                <option value="Private HouseR">Private House</option>
+                <option value="PenthouseR">Penthouse</option>
+                <option value="GarageR">Garage</option>
+                <option value="DuplexR">Duplex</option>
+                <option value="GroundR">Ground</option>
+              </optgroup>
+              <optgroup label="Commercial">
+                <option value="CommercialC">Commercial</option>
+                <option value="OfficeC">Office</option>
+                <option value="LandC">Land</option>
+                <option value="IndustrialC">Industrial</option>
+                <option value="BusinessC">Business</option>
+                <option value="GarageC">Garage</option>
+              </optgroup>
+            </select>
+            <div class="select-arrow rtl-arrow"></div>
+          </div>
+          <input id="PropertyType" name="PropertyType" type="hidden">
+        </div>
+
+        <div class="col col-sm-4">
+          <div id="ctl03_ctl00_divRoomsContainer" class="col rooms">
+            <div class="btn-group-justified select select-large rooms"
+              data-visible="1">
+              <select class="form-control" (change)="setRooms($event)" aria-label="Rooms :">
+                <option selected="selected" value="">Rooms :</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5+</option>
+              </select>
+              <div class="select-arrow rtl-arrow"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="row ">
+      <div class="col-md">
+        <button type="submit" class="btn btn-primary mt-2 " (click)="applyFilter()">Search</button>
+      </div>
+    </div>
+  </form>
+</div>

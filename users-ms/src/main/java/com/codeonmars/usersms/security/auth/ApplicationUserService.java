@@ -17,7 +17,7 @@ public class ApplicationUserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String credential) throws UsernameNotFoundException {
 
         if (credential != null) {
-            var userEntity = userRepo.findByUsername(credential);
+            var userEntity = userRepo.findByEmail(credential);
             if (userEntity.isPresent()) {
                 return new ApplicationUser(userEntity.get());
             }

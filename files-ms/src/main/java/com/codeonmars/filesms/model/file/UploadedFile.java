@@ -6,19 +6,20 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
-import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.sql.Blob;
 import java.time.Instant;
 
 @Data
 @Entity
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "files", schema = "files_ms")
-@SequenceGenerator(name = "t_files_id_seq", sequenceName = "files_ms.t_files_id_seq", allocationSize = 1)
 public class UploadedFile {
 
     @Id
@@ -41,6 +42,10 @@ public class UploadedFile {
     @Column(name = "associated")
     private Boolean associated;
     @Lob
-    @Column(name = "file_content_blob")
-    private Blob fileContent;
+    @Column(name = "file_content_byte")
+    private byte[] fileContent;
+
+    public void setAssociatedTrue() {
+        this.associated = true;
+    }
 }

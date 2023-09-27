@@ -46,8 +46,8 @@ public class PropertyUserController {
     @PostMapping
     @CanAddProperties
     @ResponseStatus(HttpStatus.CREATED)
-    public void createNewProperty(@RequestBody PropertyRequest request) {
-        propertyUserService.createNewProperty(request);
+    public Long createNewProperty(@RequestBody PropertyRequest request) {
+        return propertyUserService.createNewProperty(request);
     }
 
     @PutMapping("/{property-id}")

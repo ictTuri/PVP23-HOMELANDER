@@ -1,5 +1,6 @@
 package com.codeonmars.propertiesms.service;
 
+import com.codeonmars.commonsms.dto.FileDto;
 import com.codeonmars.commonsms.security.UserContextHolder;
 import com.codeonmars.propertiesms.model.property.OwnerEntity;
 import com.codeonmars.propertiesms.model.property.PropertiesEntity;
@@ -8,6 +9,7 @@ import com.codeonmars.propertiesms.model.property.dto.PropertyDetailedDto;
 import com.codeonmars.propertiesms.model.property.requests.PropertyRequest;
 import com.codeonmars.propertiesms.model.property.requests.PropertyUpdateRequest;
 import com.codeonmars.propertiesms.model.property.requests.TenantUpdateRequest;
+import com.codeonmars.propertiesms.remote.FilesApi;
 import com.codeonmars.propertiesms.remote.UsersApi;
 import com.codeonmars.propertiesms.repository.PropertyRepository;
 import com.github.dozermapper.core.Mapper;
@@ -19,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.Objects;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.codeonmars.propertiesms.service.specifications.PropertiesSpecifications.hasOwner;
 import static com.codeonmars.propertiesms.service.specifications.PropertiesSpecifications.hasTenants;
@@ -31,11 +35,13 @@ public class PropertyUserService {
     private final PropertyRepository propertyRepository;
     private final Mapper dozer;
     private final UsersApi usersApi;
+    private final FilesApi filesApi;
 
-    public PropertyUserService(PropertyRepository propertyRepository, Mapper dozer, UsersApi usersApi) {
+    public PropertyUserService(PropertyRepository propertyRepository, Mapper dozer, UsersApi usersApi, FilesApi filesApi) {
         this.propertyRepository = propertyRepository;
         this.dozer = dozer;
         this.usersApi = usersApi;
+        this.filesApi = filesApi;
     }
 
     @Transactional(readOnly = true)
@@ -53,7 +59,7 @@ public class PropertyUserService {
     }
 
 
-    public void createNewProperty(PropertyRequest request) {
+    public Long createNewProperty(PropertyRequest request) {
         var property = dozer.map(request, PropertiesEntity.class);
         var owner = OwnerEntity.builder()
                 .username(getLoggedUserUsername())
@@ -61,10 +67,11 @@ public class PropertyUserService {
                 .startDate(Instant.now())
                 .accepted(Boolean.TRUE)
                 .build();
-        property.initializeAddressAndInfo();
         property.setOwner(owner);
-        propertyRepository.saveAndFlush(property);
+        var saved = propertyRepository.saveAndFlush(property);
+        filesApi.linkFiles(request.getAdditionalAttributes().getImages().stream().map(UUID::toString).collect(Collectors.toSet()));
         usersApi.increasePropertySlot();
+        return saved.getId();
     }
 
 

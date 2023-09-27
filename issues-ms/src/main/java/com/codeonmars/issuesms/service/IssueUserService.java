@@ -45,8 +45,9 @@ public class IssueUserService {
     public void createNewIssue(IssueRequest request) {
             var property = propertiesApi.getPropertyOwnerTenant(request.getPropertyID(), getLoggedUserUsername());
             if (property.isPresent()) {
-                var issue = issuesRepository.save(generateIssue(request, property.get()));
-                this.sendUserMessage(generateIssueNotification(issue));
+                var propertyEntity = property.get();
+                var issue = issuesRepository.save(generateIssue(request, propertyEntity));
+                this.sendUserMessage(generateIssueNotification(issue, propertyEntity.getOwnerUsername()));
             }
     }
 
@@ -69,8 +70,8 @@ public class IssueUserService {
         return issue;
     }
 
-    private NotificationRecord generateIssueNotification(IssuesEntity issue) {
-        return new NotificationRecord("Issue created", composeMessage(issue), issue.getProperty().getOriginId(), issue.getCreationDate());
+    private NotificationRecord generateIssueNotification(IssuesEntity issue, String owner) {
+        return new NotificationRecord("Issue created", owner, composeMessage(issue), issue.getProperty().getOriginId(), issue.getCreationDate());
     }
 
     private String composeMessage(IssuesEntity issue) {

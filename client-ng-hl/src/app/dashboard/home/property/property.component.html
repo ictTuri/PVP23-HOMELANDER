@@ -1,0 +1,71 @@
+<div class="card" style="flex-direction: row;">
+    <div class="col-md-4 container fixed-size">
+        @if (property.additionalAttributes.image) {
+        <img src="data:image/jpeg;base64,{{property.additionalAttributes.image.fileContent}}" class="card-img img-size"
+            alt="Image">
+        } @else {
+        <img src="https://www.freelogovector.com/wp-content/uploads/2017/06/02%20-%20PNG%20property%20copy.jpg"
+            class="card-img img-size content-image" alt="Image">
+        }
+    </div>
+
+    <div class="col-md-8">
+        <div class="card-body">
+
+            <h3 class="card-title">
+                <span class="price">{{ property.price | currency }} </span>
+                <a class="description">{{ property.description | truncate: 90 }}</a>
+            </h3>
+
+            <nav aria-label="breadcrumb" style="--bs-breadcrumb-divider: '>';">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a class="link-body-emphasis" [routerLink]="['/']">
+                            <a class="fa-solid fa-house"></a>
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a class="city">{{ property.propertyAddress.city }}</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        {{ property.description | truncate: 20 }}
+                    </li>
+                </ol>
+            </nav>
+
+            <hr>
+            <div class="d-flex justify-content-around text-center text-uppercase living-coral-text">
+                <div>
+                    <i class="fa-solid fa-bed"></i>
+                    <span class="mb-0 fw-light"> Ap <span class="text-lowercase fw-normal">{{ property.additionalAttributes.typology }}</span></span>
+                </div>
+                <div>
+                    <i class="fa-regular fa-square"></i>
+                    <span class="mb-0 fw-light"> Area <span class="text-lowercase fw-normal">{{ property.size }}{{ property.unit }}<sup>2</sup></span></span>
+                </div>
+                <div>
+                    <i class="fa-solid fa-align-justify"></i>
+                    <span class="mb-0 fw-light"> Floor nr <span class="text-lowercase fw-normal">{{ property.propertyAddress.floorNumber }}</span></span>
+                </div>
+                <div>
+                    <i class="fa-solid fa-elevator"></i>
+                    <span class="mb-0 fw-light"> Elevator <span class="text-lowercase fw-normal">{{ property.additionalAttributes.furnished }}</span></span>
+                </div>
+                <div>
+                    <i class="fa-solid fa-bath"></i>
+                    <span class="mb-0 fw-light"> Bath nr <span class="text-lowercase fw-normal">{{ property.additionalAttributes.furnished }}</span></span>
+                </div>
+            </div>
+
+            <div class="pt-4" style="justify-content: space-between">
+                <div class="d-grid d-md-flex justify-content-between">
+                    <i class="fa-solid fa-quote-left"></i> <span class="two-line-text">Spacious suburban family home with a large backyard, ideal for entertaining, and top-rated schools nearby."
+                        "Waterfront estate with a private dock, lush landscaping, and unparalleled waterfront living."
+                        "Artistic loft conversion in a converted warehouse, featuring exposed brick, high ceilings, and an eclectic vibe."
+                        "Luxury penthouse with floor-to-ceiling windows, gourmet kitchen, and a rooftop terrace overlooking the city skyline.</span>
+                    <button type="button" class="btn btn-outline-info">View</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

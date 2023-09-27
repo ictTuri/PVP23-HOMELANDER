@@ -24,8 +24,8 @@ public class UserController {
         return new ResponseEntity<>(userGeneralService.getSimpleUserData(email), HttpStatus.OK);
     }
 
-    @GetMapping("/get-full-user-context/{username}")
-    ResponseEntity<FullUserContextDto> getFullUserContext(@PathVariable("username") String username){
-        return new ResponseEntity<>(userGeneralService.getFullUserContext(username), HttpStatus.OK);
+    @GetMapping("/get-full-user-context/{email}")
+    ResponseEntity<FullUserContextDto> getFullUserContext(@PathVariable("email") String email){
+        return new ResponseEntity<>(userGeneralService.getFullUserContext(email), HttpStatus.OK);
     }
 }

@@ -13,6 +13,4 @@ import lombok.NoArgsConstructor;
 public class PropertyUpdateRequest extends PropertyRequest{
     private Boolean rented;
     private Boolean sold;
-    private AdditionalAttributesUpdateRequest attributes;
-    private AddressUpdateRequest address;
 }

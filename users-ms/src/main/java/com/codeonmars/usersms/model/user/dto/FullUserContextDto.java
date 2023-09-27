@@ -12,9 +12,16 @@ import java.util.Set;
 @NoArgsConstructor
 public class FullUserContextDto {
     private String username;
+    private String firstName;
+    private String lastName;
+    private String phone;
+    private boolean superuser;
     private String email;
+    private String profilePicUUID;
     private String country;
     private String city;
+    private boolean canAddProperty;
+    private boolean canAddTenant;
     private Set<Long> propertyOwned = new HashSet<>();
     private Set<Long> propertyRented = new HashSet<>();
 }

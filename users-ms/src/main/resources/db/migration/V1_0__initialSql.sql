@@ -71,6 +71,7 @@ CREATE TABLE users_ms.users (
 	tenants_slots int8 NULL,
 	properties_slots int8 NULL,
 	address int8 NULL,
+	profile_pic_uuid varchar(255) NULL,
 	CONSTRAINT users_pkey PRIMARY KEY (id),
 	CONSTRAINT users_tenants_slots_fkey FOREIGN KEY (tenants_slots) REFERENCES tenants_slots(id),
 	CONSTRAINT users_properties_slots_fkey FOREIGN KEY (properties_slots) REFERENCES properties_slots(id),

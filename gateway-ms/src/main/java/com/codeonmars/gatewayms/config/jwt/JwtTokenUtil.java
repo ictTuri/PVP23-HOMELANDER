@@ -1,5 +1,7 @@
 package com.codeonmars.gatewayms.config.jwt;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -19,9 +21,15 @@ public class JwtTokenUtil {
     public Claims getAllClaimsFromToken(String token) {
         return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
     }
+
     private boolean isTokenExpired(String token) {
-        return this.getAllClaimsFromToken(token).getExpiration().before(new Date());
+        try {
+            return this.getAllClaimsFromToken(token).getExpiration().before(new Date());
+        } catch (ExpiredJwtException e) {
+            return true;
+        }
     }
+
     public boolean isInvalid(String token) {
         return this.isTokenExpired(token);
     }

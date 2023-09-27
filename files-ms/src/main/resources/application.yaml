@@ -10,6 +10,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
   flyway:
     url: jdbc:postgresql://localhost:5432/postgres
     schemas: files_ms
@@ -25,9 +26,15 @@ spring:
   sql:
     init:
       mode: never
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+      enabled: true
 
 server:
   port: 8084
+  max-http-header-size: 50KB
 
 eureka:
   client:

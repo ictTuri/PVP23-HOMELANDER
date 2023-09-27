@@ -1,18 +1,21 @@
-import { Fragment, useContext } from "react";
+import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { BellIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
-import { UserContext } from "../../context/user.context";
+import { useDispatch } from "react-redux";
+import { setCurrentUser } from "../../redux/user/user.action";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function ProfileNav() {
-  const { setCurrentUser } = useContext(UserContext);
+
+  const dispatch = useDispatch();
 
   const signOutHandler = async () => {
-    await setCurrentUser(null);
+    await dispatch(setCurrentUser(null));
+    localStorage.clear("token");
   };
 
   return (
@@ -24,6 +27,9 @@ export default function ProfileNav() {
         <span className="absolute -inset-1.5" />
         <span className="sr-only">View notifications</span>
         <BellIcon className="h-6 w-6" aria-hidden="true" />
+        <div className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2">
+          <div className="min-w-[1.2rem] inline-flex items-center justify-center h-4 text-sm text-white bg-red-500 rounded-full">25</div>
+        </div>
       </button>
 
       {/* Profile dropdown */}

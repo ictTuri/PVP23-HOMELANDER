@@ -1,11 +1,11 @@
-import { Fragment, useContext } from "react";
+import { Fragment } from "react";
 import { Link, Outlet } from "react-router-dom";
 import ProfileNav from "./profile-nav.component";
-import { UserContext } from "../../context/user.context";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../../redux/user/user.selector";
 
 export default function Navigation() {
-  const { currentUser } = useContext(UserContext);
-  console.log(currentUser);
+  const currentUser = useSelector(selectCurrentUser);
   return (
     <Fragment>
       <div className="bg-gray-800">

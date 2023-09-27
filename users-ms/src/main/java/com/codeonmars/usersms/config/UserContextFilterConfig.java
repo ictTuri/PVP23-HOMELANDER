@@ -23,12 +23,11 @@ public class UserContextFilterConfig {
 
         protected boolean shouldContinue(HttpServletRequest request){
             boolean original = super.shouldContinue(request);
-//            Predicate<String> userDetailsAPI = Pattern.compile("/users/context/(\\d|\\w|\\.|\\$\\(\\))*$").asPredicate();
             Predicate<String> apiDocs = Pattern.compile("/users/api-docs").asPredicate();
             Predicate<String> apiLogin = Pattern.compile("/users/auth/_login").asPredicate();
             Predicate<String> apiRegister = Pattern.compile("/users/auth/register").asPredicate();
             String requestURI = request.getRequestURI();
-            return original /*|| userDetailsAPI.test(requestURI)*/ || apiDocs.test(requestURI) || apiLogin.test(requestURI) || apiRegister.test(requestURI);
+            return original || apiDocs.test(requestURI) || apiLogin.test(requestURI) || apiRegister.test(requestURI);
         }
     }
 

@@ -1,8 +1,11 @@
 package com.codeonmars.gatewayms.exception;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import org.apache.http.auth.InvalidCredentialsException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
@@ -39,7 +42,7 @@ public class GlobalExceptionHandler {
         errorBody.setMessage(ex.getMessage());
         errorBody.setDesc(request.getDescription(false));
         errorBody.setSuggestion("Contact Admin");
-        return new ResponseEntity<>(errorBody, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorBody, this.getHeaders(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = { InvalidCredentialsException.class })
@@ -48,15 +51,21 @@ public class GlobalExceptionHandler {
         errorBody.setMessage(ex.getMessage());
         errorBody.setDesc(request.getDescription(false));
         errorBody.setSuggestion("Check Credentials!");
-        return new ResponseEntity<>(errorBody, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(errorBody, this.getHeaders(), HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler(value = { ExpiredJwtException.class })
+    @ExceptionHandler(value = { ExpiredJwtException.class, JwtException.class})
     protected ResponseEntity<Object> handleJWT(RuntimeException ex, WebRequest request) {
         var errorBody = new ErrorFormat();
         errorBody.setMessage(ex.getMessage());
         errorBody.setDesc(request.getDescription(false));
         errorBody.setSuggestion("Jwt expired");
-        return new ResponseEntity<>(errorBody, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(errorBody, this.getHeaders(), HttpStatus.UNAUTHORIZED);
+    }
+
+    private HttpHeaders getHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return  headers;
     }
 }

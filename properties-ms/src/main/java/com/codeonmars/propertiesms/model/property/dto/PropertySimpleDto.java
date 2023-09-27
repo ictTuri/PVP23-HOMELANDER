@@ -12,9 +12,12 @@ import java.util.UUID;
 @NoArgsConstructor
 public class PropertySimpleDto {
     private Long id;
-    private Set<UUID> images;
     private String description;
+    private String longDescription;
     private Double size;
     private String unit;
     private Double price;
+    private Integer year;
+    private PropertyAddressDto propertyAddress;
+    private AdditionalAttributesDto additionalAttributes;
 }

@@ -2,11 +2,12 @@ package com.codeonmars.usersms.service;
 
 import com.codeonmars.usersms.exception.CustomMessageException;
 import com.codeonmars.usersms.model.user.UserEntity;
-import com.codeonmars.usersms.model.user.dto.CustomResponseDto;
+import com.codeonmars.usersms.model.user.dto.ResponseDto;
 import com.codeonmars.usersms.model.user.dto.UserRegisterDto;
 import com.codeonmars.usersms.repository.UserRepository;
 import com.codeonmars.usersms.security.auth.AuthResponse;
 import com.codeonmars.usersms.security.dto.UsernameAndPasswordAuthenticationRequest;
+import com.codeonmars.usersms.security.jwt.JwtConfig;
 import com.codeonmars.usersms.security.jwt.JwtTokenProvider;
 import com.github.dozermapper.core.Mapper;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,7 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.sql.Date;
+import java.time.LocalDate;
 
 @Service
 @Transactional
@@ -31,13 +33,15 @@ public class UserAuthenticationService {
     private final Mapper dozer;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
+    private final JwtConfig jwtConfig;
 
-    public UserAuthenticationService(UserRepository userRepository, PasswordEncoder encoder, Mapper dozer, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
+    public UserAuthenticationService(UserRepository userRepository, PasswordEncoder encoder, Mapper dozer, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, JwtConfig jwtConfig) {
         this.userRepository = userRepository;
         this.encoder = encoder;
         this.dozer = dozer;
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.jwtConfig = jwtConfig;
     }
 
     public AuthResponse login(UsernameAndPasswordAuthenticationRequest credentials) {
@@ -49,18 +53,18 @@ public class UserAuthenticationService {
         } catch (AuthenticationException e) {
             throw new BadCredentialsException(USER_NOT_AUTHENTICATED);
         }
-        return new AuthResponse(token, credentials.getCredential());
+        return new AuthResponse(token, credentials.getCredential(), Date.valueOf(LocalDate.now().plusDays(jwtConfig.getTokenExpirationAfterDays())));
     }
 
-    public CustomResponseDto registerNewUser(UserRegisterDto request) {
+    public ResponseDto registerNewUser(UserRegisterDto request) {
         if (emailExists(request.getEmail()) || usernameExists(request.getUsername())) {
             throw new CustomMessageException(USERNAME_OR_EMAIL_ALREADY_EXISTS);
         }
-        request.setPassword(encoder.encode(request.getPassword()));
         var newUser = dozer.map(request, UserEntity.class);
+        newUser.setPassword(encoder.encode(request.getPassword()));
         newUser.initializeData();
-        userRepository.save(newUser);
-        return new CustomResponseDto(USER_SUCCESSFULLY_SAVED, LocalDateTime.now());
+        userRepository.saveAndFlush(newUser);
+        return new ResponseDto("CREATED", USER_SUCCESSFULLY_SAVED);
     }
 
     /* SUPPORTING METHODS */

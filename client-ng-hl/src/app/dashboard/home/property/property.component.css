@@ -1,0 +1,49 @@
+.fixed-size {
+    padding: 0;
+    height: 250px;
+    overflow: hidden;
+    display: flex;
+    justify-content: left;
+    align-items: left;
+    cursor: pointer;
+}
+
+.img-size {
+    border-top-right-radius: 0%;
+    border-bottom-right-radius: 0%;
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: cover;
+}
+
+.price {
+    color: #0D1B2A;
+    font-weight: bold;
+}
+
+.description, .city{
+    color: #415A77;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+a, i{
+    color: #415A77;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #778DA9;
+}
+
+.two-line-text {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 2; /* Limit to two lines of text */
+    max-height: 2.6em; /* Adjust based on your font size */
+}

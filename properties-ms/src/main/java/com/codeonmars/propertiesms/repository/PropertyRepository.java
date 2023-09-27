@@ -38,9 +38,10 @@ public interface PropertyRepository extends JpaRepository<PropertiesEntity, Long
 
     @Query(value = """
             SELECT p from PropertiesEntity p
-            INNER JOIN OwnerEntity o ON p.owner.id = o.id
-            INNER JOIN TenantEntity t on p.tenant.id = t.id
+            JOIN OwnerEntity o ON p.owner.id = o.id
+            LEFT JOIN TenantEntity t on p.tenant.id = t.id
             WHERE (o.username = :username AND o.email = :email)
             OR (t.username = :username AND t.email = :email)""")
-    Set<PropertiesEntity> getUsersProperties(String username, String email);
+    Set<PropertiesEntity> getUsersProperties(@Param("username") String username,
+                                             @Param("email") String email);
 }

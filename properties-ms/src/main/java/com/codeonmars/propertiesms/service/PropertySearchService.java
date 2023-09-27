@@ -3,6 +3,7 @@ package com.codeonmars.propertiesms.service;
 import com.codeonmars.propertiesms.model.property.PropertiesEntity;
 import com.codeonmars.propertiesms.model.property.dto.PropertyFilter;
 import com.codeonmars.propertiesms.model.property.dto.PropertySimpleDto;
+import com.codeonmars.propertiesms.remote.FilesApi;
 import com.codeonmars.propertiesms.repository.PropertyRepository;
 import com.github.dozermapper.core.Mapper;
 import jakarta.transaction.Transactional;
@@ -32,15 +33,16 @@ public class PropertySearchService {
 
     private final PropertyRepository propertyRepository;
     private final Mapper dozer;
+    private final FilesApi files;
 
-    public PropertySearchService(PropertyRepository propertyRepository, Mapper dozer) {
+    public PropertySearchService(PropertyRepository propertyRepository, Mapper dozer, FilesApi files) {
         this.propertyRepository = propertyRepository;
         this.dozer = dozer;
+        this.files = files;
     }
 
     public Page<PropertySimpleDto> searchProperty(PropertyFilter filter, Integer page, Integer size) {
         var pageable = PageRequest.of(page, size);
-
         Specification<PropertiesEntity> propertiesSpecifications = where(hasOwner(filter.getOwner()))
                 .and(isInCountry(filter.getCountry()))
                 .and(isInCity(filter.getCity()))
@@ -54,15 +56,16 @@ public class PropertySearchService {
                 .and(isInPriceRange(filter.getPriceRange()))
                 .and(isInSizeRange(filter.getSizeRange()))
                 .and(isInYearRange(filter.getYearRange()));
-
         return propertyRepository.findAll(propertiesSpecifications, pageable).map(this::convertToSimpleDto);
     }
-
-
 
     /* SUPPORTING METHODS */
 
     private PropertySimpleDto convertToSimpleDto(PropertiesEntity propertiesEntity) {
-        return dozer.map(propertiesEntity, PropertySimpleDto.class);
+        var toReturn = new PropertySimpleDto();
+        dozer.map(propertiesEntity, toReturn);
+        var imageUuid = propertiesEntity.getAdditionalAttributes().getImages().stream().findFirst().orElse(null);
+        toReturn.getAdditionalAttributes().setImage(files.getPropertyImage(String.valueOf(imageUuid)));
+        return toReturn;
     }
 }

@@ -30,10 +30,12 @@ public class PropertyGeneralService {
         Map<String, Set<Long>> toReturn = new HashMap<>();
         Set<PropertiesEntity> properties = propertyRepository.getUsersProperties(username, email);
         toReturn.put(OWN, properties.stream()
+                .filter(prop -> prop.getOwner() != null)
                 .filter(prop -> prop.getOwner().getUsername().equals(username) && prop.getOwner().getEmail().equals(email))
                 .map(PropertiesEntity::getId)
                 .collect(Collectors.toSet()));
         toReturn.put(RENTS, properties.stream()
+                .filter(prop -> prop.getTenant() != null)
                 .filter(prop -> prop.getTenant().getUsername().equals(username) && prop.getTenant().getEmail().equals(email))
                 .map(PropertiesEntity::getId)
                 .collect(Collectors.toSet()));

@@ -41,6 +41,8 @@ public class UserEntity {
     private Boolean superuser;
     @Column(name = "password")
     private String password;
+    @Column(name = "profile_pic_uuid")
+    private String profilePicUUID;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "tenants_slots", referencedColumnName = "id")

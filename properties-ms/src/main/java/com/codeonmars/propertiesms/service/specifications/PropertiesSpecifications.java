@@ -57,22 +57,14 @@ public final class PropertiesSpecifications {
         if (rented == null) {
             return noOp();
         }
-        if (rented) {
-            return (((root, query, criteriaBuilder) -> criteriaBuilder.isTrue(root.get(RENTED))));
-        } else {
-            return (((root, query, criteriaBuilder) -> criteriaBuilder.isFalse(root.get(RENTED))));
-        }
+        return (((root, query, criteriaBuilder) -> criteriaBuilder.isTrue(root.get(RENTED))));
     }
 
     public static Specification<PropertiesEntity> isForSale(Boolean forSale) {
         if (forSale == null) {
             return noOp();
         }
-        if (forSale) {
-            return (((root, query, criteriaBuilder) -> criteriaBuilder.isTrue(root.get(FOR_SALE))));
-        } else {
-            return (((root, query, criteriaBuilder) -> criteriaBuilder.isFalse(root.get(FOR_SALE))));
-        }
+        return (((root, query, criteriaBuilder) -> criteriaBuilder.isTrue(root.get(FOR_SALE))));
     }
 
     public static Specification<PropertiesEntity> isForRent(Boolean forRent) {

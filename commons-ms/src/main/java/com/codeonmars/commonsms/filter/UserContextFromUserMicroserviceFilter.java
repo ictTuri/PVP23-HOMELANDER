@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class UserContextFromUserMicroserviceFilter extends OncePerRequestFilter {
 
@@ -22,7 +23,8 @@ public class UserContextFromUserMicroserviceFilter extends OncePerRequestFilter 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String credential = request.getHeader(Constants.X_HL_CONTEXT_CREDENTIAL);
-        if(credential != null){
+        String secret = request.getHeader(Constants.X_HL_SECRET);
+        if(credential != null && Objects.equals(secret, "very-secret")){
             userContextRetriever.retrieveUserContext(credential).ifPresent(UserContextHolder::setContext);
         }
         filterChain.doFilter(request, response);

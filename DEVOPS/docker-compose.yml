@@ -77,6 +77,72 @@ services:
       SPRING_FLYWAY_PASSWORD: postgres
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://registry-ms:8080/eureka
 
+  files-ms:
+    build:
+      context: ../files-ms
+      dockerfile: Dockerfile
+    container_name: files-ms
+    depends_on:
+      registry-ms:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    networks:
+      - dev_network
+    ports:
+      - 8084:8084
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_FLYWAY_URL: jdbc:postgresql://postgres:5432/postgres
+      SPRING_FLYWAY_SCHEMAS: files_ms
+      SPRING_FLYWAY_USER: postgres
+      SPRING_FLYWAY_PASSWORD: postgres
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://registry-ms:8080/eureka
+
+  issues-ms:
+    build:
+      context: ../issues-ms
+      dockerfile: Dockerfile
+    container_name: issues-ms
+    depends_on:
+      registry-ms:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    networks:
+      - dev_network
+    ports:
+      - 8085:8085
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27018/issues_ms
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://registry-ms:8080/eureka
+
+  notifications-ms:
+    build:
+      context: ../notifications-ms
+      dockerfile: Dockerfile
+    container_name: notifications-ms
+    depends_on:
+      registry-ms:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    networks:
+      - dev_network
+    ports:
+      - 8086:8086
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_FLYWAY_URL: jdbc:postgresql://postgres:5432/postgres
+      SPRING_FLYWAY_SCHEMAS: notifications_ms
+      SPRING_FLYWAY_USER: postgres
+      SPRING_FLYWAY_PASSWORD: postgres
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://registry-ms:8080/eureka
+
   postgres:
     image: postgres:14.6
     container_name: postgres
@@ -87,9 +153,26 @@ services:
       POSTGRES_DATABASE: postgres
       PGDATA: /var/lib/postgresql/data/mydb
     ports:
-      - "5434:5432"
+      - "5433:5432"
     volumes:
       - postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: "exit 0"
+    networks:
+      - dev_network
+
+  mongo:
+    image: mongo:6-jammy
+    container_name: mongo
+    restart: always
+    environment:
+      MONGODB_HOST: localhost
+      MONGODB_DATABASE: postgres
+      PGDATA: /var/lib/postgresql/data/mydb
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo:/var/lib/mongodb/data
     healthcheck:
       test: "exit 0"
     networks:
