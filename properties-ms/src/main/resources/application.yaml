@@ -43,6 +43,6 @@ management:
   datadog:
     metrics:
       export:
-        api-key: 0ccad41d4d620a2d122bc8ac7625bef4
+        api-key:
         uri: https://api.datadoghq.eu
         step: 10s
