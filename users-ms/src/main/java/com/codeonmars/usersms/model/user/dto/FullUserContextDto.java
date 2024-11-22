@@ -1,5 +1,6 @@
 package com.codeonmars.usersms.model.user.dto;
 
+import com.codeonmars.commonsms.dto.FileDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,4 +25,5 @@ public class FullUserContextDto {
     private boolean canAddTenant;
     private Set<Long> propertyOwned = new HashSet<>();
     private Set<Long> propertyRented = new HashSet<>();
+    private FileDto profileImage;
 }

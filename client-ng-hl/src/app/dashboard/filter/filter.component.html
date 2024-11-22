@@ -1,67 +1,130 @@
 <div class="container">
 
   <form>
-    <div class="row m-3">
+    <div class="row m-3 text-center">
       <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-          <label for="buy" class="btn btn-default" title="Buy">
-            <input name="buy" type="checkbox" id="buy" [(ngModel)]="filter.forSale" /> Buy
-          </label>
-          <label for="rent" class="btn btn-default" title="Rent">
-            <input name="rent" type="checkbox" id="rent" [(ngModel)]="filter.forRent" /> Rent
-          </label>
+          <div class="btn-group">
+            <input name="options" type="radio" class="btn-check" id="forSale" autocomplete="off"
+              (change)="setForSaleValue()">
+            <label class="btn btn-outline-primary" for="forSale">For Sale</label>
+            <input name="options" type="radio" class="btn-check" id="forRent" autocomplete="off"
+              (change)="setForRentValue()">
+            <label class="btn btn-outline-primary" for="forRent">For Rent</label>
+          </div>
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="d-flex align-items-center justify-content-center">
 
-        <div class="col col-sm-4">
+    <div class="row mb-2">
+      <div class="d-flex align-items-center justify-content-center">
+        <div class="col col-sm-4 m-1">
           <div class="col">
-            <div class="btn-group-justified select select-large"
-              data-visible="1">
-              <select class="form-control" (change)="setCity($event)" aria-label="City :">
-                <option selected="selected" value="">City :</option>
+            <div class="btn-group-justified select select-large" data-visible="1">
+              <select (change)="onCountrySelect($event.target.value)" class="form-control" aria-label="Country">
+                <option value="">Country :</option>
+                @for (country of countries; track country.id) {
+                <option value={{country.name}}>{{country.name}}</option>
+                }
+              </select>
+            </div>
+          </div>
+        </div>
+
+        @if (selectedCountry) {
+        <div class="col col-sm-4 m-1">
+          <div class="col">
+            <div class="btn-group-justified select select-large" data-visible="1">
+              <select class="form-control" (change)="onCitySelect($event.target.value)" aria-label="City">
+                <option value="">City :</option>
                 @for (city of cities; track city.id) {
-                  <option value={{city.name}}>{{city.name}}</option>
+                <option value={{city.name}}>{{city.name}}</option>
                 }
               </select>
               <div class="select-arrow rtl-arrow"></div>
             </div>
           </div>
         </div>
-
-        <div class="col col-sm-4">
-          <div class="btn-group-justified select select-large">
-            <select class="form-control" (change)="setPropertyType($event)" aria-label="Property type">
-              <option value=""> Property type :</option>
-              <optgroup label="Residential">
-                <option value="ApartamentR">Kondo/Apartament</option>
-                <option value="VillaR">Villa</option>
-                <option value="Private HouseR">Private House</option>
-                <option value="PenthouseR">Penthouse</option>
-                <option value="GarageR">Garage</option>
-                <option value="DuplexR">Duplex</option>
-                <option value="GroundR">Ground</option>
-              </optgroup>
-              <optgroup label="Commercial">
-                <option value="CommercialC">Commercial</option>
-                <option value="OfficeC">Office</option>
-                <option value="LandC">Land</option>
-                <option value="IndustrialC">Industrial</option>
-                <option value="BusinessC">Business</option>
-                <option value="GarageC">Garage</option>
-              </optgroup>
-            </select>
-            <div class="select-arrow rtl-arrow"></div>
+        } @else {
+        <div class="col col-sm-4 m-1">
+          <div class="block">
+            <p class="text-danger">Select a country first.</p>
           </div>
-          <input id="PropertyType" name="PropertyType" type="hidden">
+        </div>
+        }
+
+        @if (selectedCity) {
+        <div class="col col-sm-4 m-1">
+          <div class="col">
+            <div class="btn-group-justified select select-large" data-visible="1">
+              <div ngbDropdown #zoneDrop="ngbDropdown">
+                <button type="button" class="form-control text-start" id="dropdownManual" ngbDropdownAnchor
+                  (click)="zoneDrop.open()">
+                  @if (selectedZones.length > 0) {
+                  @for (zone of selectedZones.slice(0, 3); track $index) {
+                  {{zone}}
+                  }
+                  } @else {
+                  Zones :
+                  }
+                </button>
+                <div ngbDropdownMenu aria-labelledby="dropdownManual" class="container">
+                  @for (area of zones; track area.id) {
+                  <li>
+                    <div class="form-check m-1">
+                      <input class="form-check-input" type="checkbox" value={{area.name}} id={{area.name}}
+                        (click)="pushCheckBoxValue(area.name)" />
+                      <label class="form-check-label" for={{area.name}}>{{area.name}}</label>
+                    </div>
+                  </li>
+                  }
+                </div>
+              </div>
+              <div class="select-arrow rtl-arrow"></div>
+            </div>
+          </div>
+        </div>
+        } @else {
+        <div class="col col-sm-4 m-1">
+          <div class="block">
+            <p class="text-danger">Select a city first.</p>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="d-flex align-items-center justify-content-center">
+        <div class="col col-sm-4 m-1">
+          <div class="col">
+            <div class="btn-group-justified select select-large" data-visible="1">
+              <select class="form-control" (change)="onTypologySelect($event.target.value)" aria-label="Property type">
+                <option value=""> Property type :</option>
+                <optgroup label="Residential">
+                  <option value="Apartament">Kondo/Apartament</option>
+                  <option value="Villa">Villa</option>
+                  <option value="Private House">Private House</option>
+                  <option value="Penthouse">Penthouse</option>
+                  <option value="Garage">Garage</option>
+                  <option value="Duplex">Duplex</option>
+                  <option value="Ground">Ground</option>
+                </optgroup>
+                <optgroup label="Commercial">
+                  <option value="Commercial">Commercial</option>
+                  <option value="Office">Office</option>
+                  <option value="Land">Land</option>
+                  <option value="Industrial">Industrial</option>
+                  <option value="Business">Business</option>
+                </optgroup>
+              </select>
+            </div>
+          </div>
         </div>
 
-        <div class="col col-sm-4">
-          <div id="ctl03_ctl00_divRoomsContainer" class="col rooms">
-            <div class="btn-group-justified select select-large rooms"
-              data-visible="1">
+        <div class="col col-sm-4 m-1">
+          <div class="col">
+            <div class="btn-group-justified select select-large" data-visible="1">
               <select class="form-control" (change)="setRooms($event)" aria-label="Rooms :">
                 <option selected="selected" value="">Rooms :</option>
                 <option value="0">0</option>
@@ -71,16 +134,93 @@
                 <option value="4">4</option>
                 <option value="5">5+</option>
               </select>
-              <div class="select-arrow rtl-arrow"></div>
             </div>
           </div>
         </div>
 
+        <div class="col col-sm-4 m-1">
+          <div class="col">
+            <div class="btn-group-justified select select-large" data-visible="1">
+
+              <div ngbDropdown #myDrop="ngbDropdown">
+                <button type="button" class="form-control text-start" id="dropdownManual" ngbDropdownAnchor
+                  (focus)="myDrop.open()">
+                  @if (selectedMinPrice) {
+                  @if (selectedMaxPrice) {
+                  {{selectedMinPrice}} - {{selectedMaxPrice}}
+                  } @else {
+                  Min price - {{selectedMinPrice}}
+                  }
+                  } @else if (selectedMaxPrice) {
+                  @if (selectedMinPrice) {
+                  {{selectedMinPrice}} - {{selectedMaxPrice}}
+                  } @else {
+                  Max price - {{selectedMaxPrice}}
+                  }
+                  } @else {
+                  Price :
+                  }
+                </button>
+                <div ngbDropdownMenu aria-labelledby="dropdownManual">
+                  <div class="row">
+                    <div class="col">
+                      <input type="number" style="border: 0;" placeholder="Min price" aria-label="Min price">
+                      <div class="container-dropdown">
+                        @if (filter.forRent) {
+                        @for (price of minRentFiltered; track $index) {
+                        <li type="button" value={{price.value}} (click)="onRentMinPriceSet($event.target.value)">
+                          {{price.value
+                          | currency}}</li>
+                        }
+                        } @else if (filter.forSale) {
+                        @for (price of minSaleFiltered; track $index) {
+                        <li type="button" value={{price.value}} (click)="onSaleMinPriceSet($event.target.value)">
+                          {{price.value
+                          | currency}}</li>
+                        }
+                        } @else {
+                        @for (price of generalMinFiltered; track $index) {
+                        <li type="button" value={{price.value}} (click)="onGeneralMinPriceSet($event.target.value)">{{price.value |
+                          currency}}</li>
+                        }
+                        }
+                      </div>
+                    </div>
+                    <div class="col">
+                      <input type="number" style="border: 0;" placeholder="Max price" aria-label="Max price">
+                      <div class="container-dropdown">
+                        @if (filter.forRent) {
+                        @for (price of maxRentFiltered; track $index) {
+                        <li type="button" value={{price.value}} (click)="onRentMaxPriceSet($event.target.value)">
+                          {{price.value
+                          | currency}}</li>
+                        }
+                        } @else if (filter.forSale) {
+                        @for (price of maxSaleFiltered; track $index) {
+                        <li type="button" value={{price.value}} (click)="onSaleMaxPriceSet($event.target.value)">
+                          {{price.value
+                          | currency}}</li>
+                        }
+                        } @else {
+                        @for (price of generalMaxFiltered; track $index) {
+                        <li type="button" value={{price.value}} (click)="onGeneralMaxPriceSet($event.target.value)">{{price.value |
+                          currency}}</li>
+                        }
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="row ">
-      <div class="col-md">
-        <button type="submit" class="btn btn-primary mt-2 " (click)="applyFilter()">Search</button>
+
+    <div class="row mb-2">
+      <div class="col-md text-center">
+        <button type="submit" class="btn btn-info mt-2" (click)="applyFilter()">Search</button>
       </div>
     </div>
   </form>

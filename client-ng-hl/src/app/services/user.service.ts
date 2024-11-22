@@ -28,12 +28,17 @@ export class UserService {
     return this._http.get<DetailedUser>(this.baseUserUrl + '/user/get-full-user-context/' + email);  
   }
 
+  logout() {
+    this._cookie.delete('jwttoken');
+    this._cookie.delete('email');
+  }
+
   getTokenFromCookie(): string {
     return this._cookie.get('jwttoken');
   }
 
   existCookie(): boolean {
-    return !!this._cookie.get('jwttoken');
+    return !!this._cookie.get('jwttoken') && !!this._cookie.get('email');
   }
 
   getEmailFromCookie(): string {

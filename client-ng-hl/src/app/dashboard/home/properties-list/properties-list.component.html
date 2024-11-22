@@ -1,0 +1,49 @@
+<ul class="list-group min-vh-100 mb-3">
+    @if (isLoading) {
+    <div class="mask" style="text-align: center;">
+        <hl-loading-spinner></hl-loading-spinner>
+    </div>
+    } @else {
+    @if (data.length !== 0) {
+    @for (property of data; track property.id) {
+    <div class="m-1" id="{{ property.id }}">
+        <hl-property [property]="property"></hl-property>
+    </div>
+    }
+    @if (hasMultiplePages) {
+        <div class="container mt-2">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+    
+                    @if (currentPage > 0) {
+                    <li class="page-item" (click)="getPage(currentPage - 1)">
+                        <a class="page-link" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    }
+    
+                    @for (page of totalPages; track $index ) {
+                    <li class="page-item" (click)="getPage(page)"><a class="page-link">{{page + 1}}</a></li>
+                    }
+    
+                    @if (currentPage < totalPages.length - 1) { <li class="page-item" (click)="getPage(currentPage + 1)">
+                        <a class="page-link" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                        </li>
+                        }
+    
+                </ul>
+            </nav>
+        </div>
+    }
+    } @else {
+    <div class="container row flex-column min-vh-100">
+        <div class="alert alert-danger" role="alert">
+            <strong>No data found!</strong> There is no information available at the moment.
+        </div>
+    </div>
+    }
+    }
+</ul>

@@ -4,7 +4,6 @@ import com.codeonmars.commonsms.dto.FileDto;
 import com.codeonmars.filesms.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,7 +42,7 @@ public class InternalController {
                                   @RequestParam(name = "fileUUIDLink") String fileUUIDLink) {
         fileService.unlinkAndLinkFile(fileUUIDUnlink, fileUUIDLink);
     }
-    @GetMapping
+    @PostMapping("/user/profile-image")
     @ResponseStatus(HttpStatus.OK)
     public FileDto getProfilePicture(@RequestParam(name = "uuid") String uuid) {
         return fileService.getProfilePicture(uuid);

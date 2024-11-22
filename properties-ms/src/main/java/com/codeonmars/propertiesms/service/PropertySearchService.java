@@ -21,10 +21,11 @@ import static com.codeonmars.propertiesms.service.specifications.PropertiesSpeci
 import static com.codeonmars.propertiesms.service.specifications.PropertiesSpecifications.isInPriceRange;
 import static com.codeonmars.propertiesms.service.specifications.PropertiesSpecifications.isInSizeRange;
 import static com.codeonmars.propertiesms.service.specifications.PropertiesSpecifications.isInYearRange;
-import static com.codeonmars.propertiesms.service.specifications.PropertiesSpecifications.isInZone;
+import static com.codeonmars.propertiesms.service.specifications.PropertiesSpecifications.isInZones;
 import static com.codeonmars.propertiesms.service.specifications.PropertiesSpecifications.isOfTopology;
 import static com.codeonmars.propertiesms.service.specifications.PropertiesSpecifications.isRented;
 import static com.codeonmars.propertiesms.service.specifications.PropertiesSpecifications.isSold;
+import static com.codeonmars.propertiesms.service.specifications.PropertiesSpecifications.orderByCreationTimeStamp;
 import static org.springframework.data.jpa.domain.Specification.where;
 
 @Service
@@ -43,10 +44,11 @@ public class PropertySearchService {
 
     public Page<PropertySimpleDto> searchProperty(PropertyFilter filter, Integer page, Integer size) {
         var pageable = PageRequest.of(page, size);
-        Specification<PropertiesEntity> propertiesSpecifications = where(hasOwner(filter.getOwner()))
+        Specification<PropertiesEntity> propertiesSpecifications = where(orderByCreationTimeStamp())
+                .and(hasOwner(filter.getOwner()))
                 .and(isInCountry(filter.getCountry()))
                 .and(isInCity(filter.getCity()))
-                .and(isInZone(filter.getZone()))
+                .and(isInZones(filter.getZones()))
                 .and(isRented(filter.getRented()))
                 .and(isSold(filter.getSold()))
                 .and(isForSale(filter.getForSale()))

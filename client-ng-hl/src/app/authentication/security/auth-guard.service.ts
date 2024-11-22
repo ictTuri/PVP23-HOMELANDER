@@ -16,7 +16,7 @@ export class AuthGuardService {
         if (this._userService.existCookie()) {
             return true;
         }
-        this._route.navigate(['login'], { queryParams: { requested: state.url } });
+        this._route.navigate(['/auth'], { queryParams: { requested: state.url } });
         return false;
     }
 }

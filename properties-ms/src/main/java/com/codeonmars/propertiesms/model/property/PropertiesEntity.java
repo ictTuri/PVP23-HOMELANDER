@@ -4,6 +4,7 @@ package com.codeonmars.propertiesms.model.property;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,6 +17,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 
@@ -24,6 +26,7 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "properties", schema = "properties_ms")
+@EntityListeners(AuditingEntityListener.class)
 public class PropertiesEntity {
 
     @Id
@@ -39,9 +42,9 @@ public class PropertiesEntity {
     @Column(name = "unit")
     private String unit;
     @Column(name = "for_sale")
-    private Boolean forSale;
+    private Boolean forSale = false;
     @Column(name = "for_rent")
-    private Boolean forRent;
+    private Boolean forRent = false;
     @Column(name = "price")
     private Double price;
     @Column(name = "year")

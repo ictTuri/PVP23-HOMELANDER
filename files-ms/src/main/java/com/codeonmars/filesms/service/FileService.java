@@ -8,6 +8,7 @@ import com.codeonmars.filesms.remote.UsersApi;
 import com.codeonmars.filesms.repository.FileRepository;
 import com.github.dozermapper.core.Mapper;
 import jakarta.persistence.EntityManager;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @Transactional
 public class FileService {
@@ -60,8 +62,13 @@ public class FileService {
     }
 
     public FileDto getProfilePicture(String uuid) {
-        var image = fileRepository.findByUuid(uuid).orElse(null);
-        return this.mapImageToFileDto(image);
+        if (!uuid.isBlank()) {
+            var image = fileRepository.findByUuid(uuid).orElse(null);
+            return this.mapImageToFileDto(image);
+        } else {
+            log.info("No UUID provided: {}", uuid);
+            return new FileDto();
+        }
     }
 
     public List<FileDto> getPropertyImages(List<String> uuids) {

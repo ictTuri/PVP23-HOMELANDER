@@ -1,0 +1,26 @@
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex flex-column align-items-center text-center">
+            @if (fileDto) {
+                <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin"
+                class="rounded-circle" width="150">
+            } @else {
+                <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin"
+                class="rounded-circle" width="150">
+                
+            }
+            <div class="col-md-12 m-2">
+                <div class="col-8">
+                  <label class="btn btn-default p-0">
+                    <input type="file" accept="image/*" multiple (change)="selectFiles($event)" />
+                  </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<mat-dialog-actions>
+    <button class="btn btn-secondary m-2" mat-button mat-dialog-close>Cancel</button>
+    <button class="btn btn-primary m-2" type="submit" [mat-dialog-close]="true"
+      (click)="saveImage()">Save</button>
+  </mat-dialog-actions>

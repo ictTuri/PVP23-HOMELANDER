@@ -1,6 +1,28 @@
-<div class="container mt-3">
-    <button class="btn btn-secondary m-2" (click)="addNewProperty()">Add New Property</button>
-    <div>
-        <hl-properties-list [filterData]="filterData"></hl-properties-list>
+<div class="container">
+    <div class="row rounded-3 mt-3" style="background-color: white;">
+        <hl-filter (filterApplied)="onFilterApplied($event)"></hl-filter>
+    </div>
+    <div class="row">
+        <div class="col-lg-3 d-lg-block d-md-none">
+            <hl-sidepanel></hl-sidepanel>
+        </div>
+        <div class="col-lg-9 col-md-12">
+            <div class="m-10">
+                <div class="container mt-3 rounded-3" style="background-color: whitesmoke;">
+                    @if (user && user.canAddProperty) {
+                        <div class="row">
+                            <div class="col-md-12" style="text-align: right;">
+                                <button class="btn btn-info m-3" (click)="addNewProperty()">Add New Property</button>
+                            </div>
+                        </div>
+                    }
+                    <div class="row">
+                        <div class="col-md-12">
+                            <hl-properties-list [filterData]="filterData"></hl-properties-list>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

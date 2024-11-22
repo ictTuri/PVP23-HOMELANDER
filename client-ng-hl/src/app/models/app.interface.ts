@@ -53,12 +53,33 @@ export interface User {
 export interface Property {
     id: number,
     description: string,
-    longDescriprion: string,
+    longDescription: string,
     size: number,
     unit: string,
     price: number,
     additionalAttributes: AdditionalAttributes,
     propertyAddress: PropertyAddress
+}
+
+export interface Country {
+    id: number,
+    name: string,
+    currency: string,
+    abbreviation: string
+}
+
+export interface City {
+    id: number,
+    name: string,
+    isCapitol: boolean,
+    areas: Area[]
+}
+
+export interface Area {
+    id: number,
+    name: string,
+    description: string, 
+    nrOfProperties: number
 }
 
 export interface File {
@@ -127,5 +148,6 @@ export interface DetailedUser {
     canAddProperty: boolean, 
     canAddTenant: boolean, 
     propertyOwned: number[],
-    propertyRented: number[]
+    propertyRented: number[],
+    profileImage: FileDto
 }

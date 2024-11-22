@@ -10,6 +10,8 @@ import com.codeonmars.propertiesms.model.property.dto.YearRange;
 import jakarta.persistence.criteria.Join;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.util.Set;
+
 public final class PropertiesSpecifications {
 
     /* property address entity is joined in queries*/
@@ -35,11 +37,20 @@ public final class PropertiesSpecifications {
     private static final String OWNER = "owner";
     private static final String TENANT = "tenant";
     private static final String USERNAME = "username";
-    private static final String ACTIVE = "active";
+    private static final String CREATION_TIMESTAMP = "creationDate";
 
 
 
     private PropertiesSpecifications() {
+    }
+
+    public static Specification<PropertiesEntity> orderByCreationTimeStamp() {
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            criteriaQuery.orderBy(
+                    criteriaBuilder.desc(root.get(CREATION_TIMESTAMP))
+            );
+            return criteriaBuilder.conjunction();
+        };
     }
 
     public static Specification<PropertiesEntity> isSold(Boolean sold) {
@@ -64,7 +75,12 @@ public final class PropertiesSpecifications {
         if (forSale == null) {
             return noOp();
         }
-        return (((root, query, criteriaBuilder) -> criteriaBuilder.isTrue(root.get(FOR_SALE))));
+        if (forSale) {
+            return (((root, query, criteriaBuilder) -> criteriaBuilder.isTrue(root.get(FOR_SALE))));
+        } else {
+            return (((root, query, criteriaBuilder) -> criteriaBuilder.isFalse(root.get(FOR_SALE))));
+        }
+
     }
 
     public static Specification<PropertiesEntity> isForRent(Boolean forRent) {
@@ -98,13 +114,13 @@ public final class PropertiesSpecifications {
         });
     }
 
-    public static Specification<PropertiesEntity> isInZone(String zone) {
-        if (zone == null || zone.isBlank()) {
+    public static Specification<PropertiesEntity> isInZones(Set<String> zones) {
+        if (zones.isEmpty()) {
             return noOp();
         }
         return ((root, query, criteriaBuilder) -> {
             Join<PropertyAddress, PropertiesEntity> joinParent = root.join(PROPERTY_ADDRESS);
-            return criteriaBuilder.like(criteriaBuilder.lower(joinParent.get(ZONE)), getLikeOperatorJollyStartEndToLoweCase(zone));
+            return joinParent.get(ZONE).in(zones);
         });
     }
 
@@ -171,7 +187,7 @@ public final class PropertiesSpecifications {
         }
     }
 
-    public static Specification<PropertiesEntity> hasOwner(String owner){
+    public static Specification<PropertiesEntity>   hasOwner(String owner){
         if (owner == null || owner.isBlank()) {
             return noOp();
         }

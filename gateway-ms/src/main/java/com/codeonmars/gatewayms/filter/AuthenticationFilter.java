@@ -3,6 +3,7 @@ package com.codeonmars.gatewayms.filter;
 import com.codeonmars.gatewayms.config.RouteValidator;
 import com.codeonmars.gatewayms.config.jwt.JwtTokenUtil;
 import io.jsonwebtoken.Claims;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -11,10 +12,7 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
-import org.springframework.web.util.WebUtils;
 import reactor.core.publisher.Mono;
-
-import java.util.UUID;
 
 
 @Component
@@ -25,6 +23,9 @@ public class AuthenticationFilter implements GatewayFilter {
     private static final String X_HL_SECRET = "X-HL-secret";
     private final RouteValidator routeValidator;
     private final JwtTokenUtil jwtTokenUtil;
+
+    @Value("${app.header.secret}")
+    private String headerSecret;
 
     public AuthenticationFilter(RouteValidator routeValidator, JwtTokenUtil jwtTokenUtil) {
         this.routeValidator = routeValidator;
@@ -79,7 +80,7 @@ public class AuthenticationFilter implements GatewayFilter {
         Claims claims = jwtTokenUtil.getAllClaimsFromToken(token);
         exchange.getRequest().mutate()
                 .header(X_HL_CONTEXT_CREDENTIAL, String.valueOf(claims.get("sub")))
-                .header(X_HL_SECRET, String.valueOf("very-secret"))
+                .header(X_HL_SECRET, headerSecret)
                 .build();
     }
 }

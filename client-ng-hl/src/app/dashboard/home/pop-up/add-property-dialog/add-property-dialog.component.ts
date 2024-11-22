@@ -1,24 +1,25 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { FilesService } from '../../../../services/files.service';
-import { Cities, Countries } from '../../../filter/dropdown-values.data';
 import { PropertyService } from '../../../../services/property.service';
 import { Observable, forkJoin, map } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
+import { City, Country } from '../../../../models/app.interface';
 
 @Component({
   selector: 'app-add-property-dialog',
   templateUrl: './add-property-dialog.component.html',
   styleUrl: './add-property-dialog.component.css',
 })
-export class AddPropertyDialogComponent {
+export class AddPropertyDialogComponent implements OnInit {
 
   constructor(private _filesService: FilesService,
     private _propertyService: PropertyService,
     private _toastr: ToastrService) { }
 
-  cities = Cities;
-  countries = Countries;
+  selectedCountry: Country = null;
+  cities: City[] = [];
+  countries: Country[] = [];
   selectedFiles?: FileList;
   isLoading: boolean = false;
 
@@ -31,7 +32,7 @@ export class AddPropertyDialogComponent {
     price: new FormControl(10),
     propertyAddress: new FormGroup({
       country: new FormControl(null),
-      city: new FormControl(null),
+      city: new FormControl({ disabled: true }),
       zone: new FormControl(null),
       address: new FormControl(null),
       floorNumber: new FormControl(null),
@@ -47,8 +48,29 @@ export class AddPropertyDialogComponent {
     })
   });
 
+  ngOnInit(): void {
+    this._propertyService.getCountries().subscribe(
+      {
+        next: responseData => {
+          this.countries = responseData;
+        },
+        error: error => {
+          console.error('Error fetching countries:', error);
+        }
+      });
+  }
+
+  onCountrySelect(name: any) {
+    this.selectedCountry = this.countries.filter(item => item.name === name).pop();
+    this._propertyService.getCitiesByCountry(""+this.selectedCountry.id)
+      .subscribe(cities => {
+        this.cities = cities;
+      });
+  }
+
   onSubmit() {
     if (this.selectedFiles) {
+      console.log(this.propertyForm.value);
       this.uploadFiles().subscribe({
         next: (stringsList: string[]) => {
           this.propertyForm.get('additionalAttributes.images').setValue(stringsList);

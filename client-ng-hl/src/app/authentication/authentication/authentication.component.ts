@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { NgForm } from '@angular/forms';
-import { CookieService } from 'ngx-cookie-service';
-import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { BehaviorSubject } from 'rxjs';
-import { DetailedUser } from '../../models/app.interface';
+import { Store } from '@ngrx/store';
+import { login } from '../../store/user/user.actions';
+import { LoginUser } from '../../models/app.interface';
+import { selectIsLoading } from '../../store/user/user.selectors';
 
 @Component({
   selector: 'hl-authentication',
@@ -13,43 +13,26 @@ import { DetailedUser } from '../../models/app.interface';
   styleUrl: './authentication.component.css'
 })
 export class AuthenticationComponent implements OnInit {
-  user = new BehaviorSubject<DetailedUser>(null);
   isLoading: boolean = false;
   isLogin: boolean = true;
   credential: string = '';
   password: string = '';
-  
+
 
   constructor(private _userService: UserService,
-    private _cookie: CookieService,
     private _toastr: ToastrService,
-    private _router: Router) { }
+    private _store: Store) {
+    this._store.select(selectIsLoading).subscribe(isLoading => (this.isLoading = isLoading));
+  }
 
   ngOnInit(): void {
 
   }
 
   authenticateUser(form: NgForm): void {
-    this.isLoading = true;
-    this._userService.authenticate({ credential: form.value.email, password: form.value.password }).subscribe(
-      {
-        next: responseData => {
-          form.reset();
-          this.isLoading = false;
-          this._toastr.success('Login successfully!');
-          this._cookie.set('jwttoken', responseData.token);
-          this._userService.getDetailedUserInfo(responseData.email).subscribe({
-            next: response => {
-              this.user.next(response);
-            }
-          });
-          console.log(this.user);
-          this._router.navigate(['/']);
-        },
-        error:() => {
-          this.applyOnError(form);
-        }
-      });
+    const loginUser = buildUser(form.value.email, form.value.password);
+    console.log('dispatching login');
+    this._store.dispatch(login({ credentials: loginUser }));
   }
 
   registerUser(form: NgForm): void {
@@ -77,3 +60,8 @@ export class AuthenticationComponent implements OnInit {
   }
 
 }
+function buildUser(email: any, password: any) {
+  const user: LoginUser = { credential: email, password: password };
+  return user;
+}
+

@@ -1,17 +1,19 @@
 <nav class="navbar navbar-expand-sm" style="background-color: #415A77;">
     <div class="container-fluid">
-        <span role="button" style="color: #E0E1DD;" [routerLink]="['/']" class="navbar-brand"><i class="fa-solid fa-globe"></i>
+        <span role="button" style="color: #E0E1DD;" [routerLink]="['/']" class="navbar-brand"><i
+                class="fa-solid fa-globe"></i>
             HOMELANDER</span>
         <div>
-            @if (authenticated === true) {
+            @if (user) {
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item" ngbDropdown>
                     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMuVZPUguhjwOPqFgeplotL_MmSDTV2Y-dJh72EC8yTQ&s"
                         class="rounded-img" id="profileDropdown" style="width: 40px;" ngbDropdownToggle>
-                    <div ngbDropdownMenu style="width: 120px;" aria-labelledby="profileDropdown"
+                    <div ngbDropdownMenu style="width: 200px; height: 300px" aria-labelledby="profileDropdown"
                         class="dropdown-menu dropdown-menu-end">
-                        <a ngbDropdownItem (click)="$event.preventDefault()">Owned</a>
+                        <a ngbDropdownItem [routerLink]="['/home/profile']">Profile</a>
                         <a ngbDropdownItem (click)="$event.preventDefault()">Rented</a>
+                        <a ngbDropdownItem (click)="logout()">Logout</a>
                     </div>
                 </li>
             </ul>

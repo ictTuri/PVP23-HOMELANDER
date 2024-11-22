@@ -1,0 +1,6 @@
+.container-dropdown {
+    max-width: auto; /* Set the width of the container */
+    height: 164px; /* Set the height of the container */
+    overflow: auto; /* Add scrollbars when content overflows */
+    border: 1px solid #ccc; /* Just for visualization */
+  }

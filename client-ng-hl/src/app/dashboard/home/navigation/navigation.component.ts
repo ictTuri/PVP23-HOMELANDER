@@ -1,26 +1,36 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { User } from '../../../models/app.interface';
+import { Component, OnInit } from '@angular/core';
+import { DetailedUser } from '../../../models/app.interface';
 import { UserService } from '../../../services/user.service';
-import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'hl-navigation',
   templateUrl: './navigation.component.html',
   styleUrl: './navigation.component.css'
 })
-export class NavigationComponent implements OnInit, OnDestroy{
-  user: User = null;
-  authenticated: boolean = false; 
-  subscription!: Subscription;
+export class NavigationComponent implements OnInit {
+  user: DetailedUser = null;
 
-  constructor(private _userService: UserService) {}
+  constructor(private _userService: UserService,
+    private _router: Router
+  ) { }
 
   ngOnInit(): void {
-    this.authenticated = true;
-  }
-  
-  ngOnDestroy(): void {
-    // this.subscription.unsubscribe();  
+    if (this._userService.existCookie()) {
+      var email = this._userService.getEmailFromCookie();
+      this._userService.getDetailedUserInfo(email).subscribe({
+        next: responseData => {
+          this.user = responseData;
+        },
+        error: (e) => {
+          console.log(e);
+        }
+      })
+    }
   }
 
+  logout() {
+    this._userService.logout();
+    location.reload();
+  }
 }

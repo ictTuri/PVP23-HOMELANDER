@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,7 +18,7 @@ public class PropertyFilter {
     private SizeRange sizeRange;
     private String country;
     private String city;
-    private String zone;
+    private Set<String> zones;
     private String typology;
     private Boolean furnished;
     private PriceRange priceRange;

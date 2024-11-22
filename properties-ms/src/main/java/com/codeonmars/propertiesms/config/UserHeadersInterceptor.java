@@ -13,7 +13,6 @@ import java.util.Optional;
 
 public class UserHeadersInterceptor implements RequestInterceptor {
 
-
     @Override
     public void apply(RequestTemplate template) {
         if (getCredentialHeader().isPresent() && getSecretHeader().isPresent()) {

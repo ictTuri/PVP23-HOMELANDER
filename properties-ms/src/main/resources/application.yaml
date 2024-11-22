@@ -7,10 +7,10 @@ spring:
     username: postgres
     password: postgres
   jpa:
-    show-sql: true
+#    show-sql: true
     properties:
       hibernate:
-        format_sql: true
+#        format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
   flyway:
     url: jdbc:postgresql://localhost:5432/postgres
@@ -38,3 +38,11 @@ eureka:
   instance:
     hostname: registry-ms
     prefer-ip-address: true
+
+management:
+  datadog:
+    metrics:
+      export:
+        api-key: 0ccad41d4d620a2d122bc8ac7625bef4
+        uri: https://api.datadoghq.eu
+        step: 10s

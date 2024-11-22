@@ -46,7 +46,8 @@
         <label for="country" class="form-label">Country</label>
         <div class="col">
           <div class="btn-group-justified select select-large" data-visible="1">
-            <select class="form-control" formControlName="country" required id="country" aria-label="Country :">
+            <select class="form-control" formControlName="country" required id="country" aria-label="Country :"
+              (change)="onCountrySelect($event.target.value)">
               @for (country of countries; track country.id) {
               <option value={{country.name}}>{{country.name}}</option>
               }
@@ -59,11 +60,15 @@
         <label for="city" class="form-label">City</label>
         <div class="col">
           <div class="btn-group-justified select select-large" data-visible="1">
-            <select class="form-control" formControlName="city" required id="city" aria-label="City :">
-              @for (city of cities; track city.id) {
-              <option value={{city.name}}>{{city.name}}</option>
-              }
-            </select>
+            @if (selectedCountry) {
+              <select class="form-control" formControlName="city" required id="city" aria-label="City :">
+                @for (city of cities; track city.id) {
+                <option value={{city.name}}>{{city.name}}</option>
+                }
+              </select>
+            } @else {
+              <p class="text-danger">Select a Country</p>
+            }
             <div class="select-arrow rtl-arrow"></div>
           </div>
         </div>

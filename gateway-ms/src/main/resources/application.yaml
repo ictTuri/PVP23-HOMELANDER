@@ -23,6 +23,8 @@ url:
   allowed: http://localhost:3000
 
 app:
+  header:
+    secret: $2a$16$zshjbexJ6NpHeWOR3J/VT.l3rmdGipT4KCbUZZftgwoM8SbpN4TOq
   jwt:
     secretKey: supercalifragilisticexpialidocioussecretkeyhere
     token-prefix: Bearer

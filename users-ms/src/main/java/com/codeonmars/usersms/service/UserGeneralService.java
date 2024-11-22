@@ -4,6 +4,7 @@ import com.codeonmars.commonsms.security.UserContextHolder;
 import com.codeonmars.usersms.exception.UserNotFoundException;
 import com.codeonmars.usersms.model.user.UserEntity;
 import com.codeonmars.usersms.model.user.dto.FullUserContextDto;
+import com.codeonmars.usersms.model.user.dto.UpdateUserRequest;
 import com.codeonmars.usersms.model.user.projection.SimpleUserProjection;
 import com.codeonmars.usersms.remote.FilesApi;
 import com.codeonmars.usersms.remote.PropertiesApi;
@@ -72,11 +73,19 @@ public class UserGeneralService {
                 fullUser.setPropertyRented(properties.getOrDefault("rents", null));
                 fullUser.setCanAddProperty(loggedUser.canAddProperties());
                 fullUser.setCanAddTenant(loggedUser.canAddTenants());
+                this.updateProfileImage(userData, fullUser);
                 return fullUser;
             }
             throw new UserNotFoundException(CAN_NOT_FIND_USER_WITH_GIVEN_USERNAME);
         }
         throw new UserNotFoundException(YOU_ARE_NOT_THE_LOGGED_USER);
+    }
+
+    private void updateProfileImage(UserEntity userData, FullUserContextDto fullUser) {
+        if(userData.getProfilePicUUID() != null && !userData.getProfilePicUUID().isBlank()) {
+            var profileImage = filesApi.getProfilePicture(userData.getProfilePicUUID());
+            fullUser.setProfileImage(profileImage);
+        }
     }
 
     public void setProfileUUID(String uuid) {
@@ -94,6 +103,10 @@ public class UserGeneralService {
                 userRepository.save(user);
             }
         }
+    }
+
+    public void updateUserData(String email, UpdateUserRequest request) {
+        // TODO: update user.
     }
 
     /* SUPPORTING METHODS */
